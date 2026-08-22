@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="FIVEGRID">
+  <rect width="64" height="64" rx="15" fill="#181a27"/>
+  <g stroke="#f0c27a" stroke-width="2" opacity=".72">
+    <path d="M14 14v36M23 14v36M32 14v36M41 14v36M50 14v36"/>
+    <path d="M14 14h36M14 23h36M14 32h36M14 41h36M14 50h36"/>
+  </g>
+  <circle cx="23" cy="32" r="5.4" fill="#f7f2e8"/>
+  <circle cx="32" cy="32" r="5.4" fill="#ec5f4f"/>
+  <circle cx="41" cy="32" r="5.4" fill="#0d0e12" stroke="#f0c27a" stroke-width="1"/>
+</svg>

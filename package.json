@@ -1,0 +1,16 @@
+{
+  "name": "fivegrid-omok",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A zero-database, multilingual Gomoku/Omok static website with three AI levels and learning courses.",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "node scripts/serve.mjs",
+    "preview": "node scripts/serve.mjs dist 4173",
+    "test": "node scripts/test.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

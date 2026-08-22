@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: fivegrid-omok
+    runtime: static
+    plan: free
+    buildCommand: npm run build
+    staticPublishPath: ./dist
+    autoDeployTrigger: commit
+    envVars:
+      - key: NODE_VERSION
+        value: 24.14.1
+      - key: SKIP_INSTALL_DEPS
+        value: "true"
+    headers:
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: X-Frame-Options
+        value: SAMEORIGIN
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
+      - path: /*
+        name: Permissions-Policy
+        value: geolocation=(), microphone=(), camera=()
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=86400
+      - path: /service-worker.js
+        name: Cache-Control
+        value: no-cache
