@@ -1,4 +1,4 @@
-import { BUILD_DATE, SITE_NAME, localeOrder, locales, pagePath, pages } from './config.mjs';
+import { BUILD_DATE, GOOGLE_ADSENSE_ACCOUNT, SITE_NAME, localeOrder, locales, pagePath, pages } from './config.mjs';
 import { content } from './content.mjs';
 
 const pageByKey = Object.fromEntries(pages.map((page) => [page.key, page]));
@@ -176,9 +176,12 @@ function headMarkup(siteUrl, locale, pageKey, extra = {}) {
   const meta = content[locale].meta[pageKey];
   const canonical = `${siteUrl}${pagePath(locale, pageKey)}`;
   const socialImage = `${siteUrl}/assets/og-cover.png`;
+  const adsenseMeta = GOOGLE_ADSENSE_ACCOUNT
+    ? `\n    <meta name="google-adsense-account" content="${GOOGLE_ADSENSE_ACCOUNT}">`
+    : '';
   return `
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">${adsenseMeta}
     <meta name="theme-color" content="#181a27">
     <meta name="color-scheme" content="light">
     <title>${escapeHtml(meta.title)}</title>
@@ -586,8 +589,9 @@ export function renderLanguageHub(siteUrl) {
     { locale: 'zh', title: '开始五子棋学习', text: '中文AI对弈、规则、策略与分级课程' }
   ];
   const alternates = localeOrder.map((code)=>`<link rel="alternate" hreflang="${locales[code].hreflang}" href="${siteUrl}${pagePath(code,'home')}">`).join('\n');
+  const adsenseMeta = GOOGLE_ADSENSE_ACCOUNT ? `<meta name="google-adsense-account" content="${GOOGLE_ADSENSE_ACCOUNT}">` : '';
   return `<!doctype html><html lang="en"><head>
-    <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#181a27">
+    <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">${adsenseMeta}<meta name="theme-color" content="#181a27">
     <title>FIVEGRID | Gomoku · 오목 · 五子棋</title><meta name="description" content="Choose Korean, English or Simplified Chinese to play Gomoku online against AI and learn rules and strategy.">
     <meta name="robots" content="index,follow"><link rel="canonical" href="${siteUrl}/"><link rel="alternate" type="application/rss+xml" title="${SITE_NAME} RSS" href="${siteUrl}/rss.xml">${alternates}<link rel="alternate" hreflang="x-default" href="${siteUrl}/">
     <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/assets/icon-192.png"><link rel="manifest" href="/manifest.webmanifest"><link rel="stylesheet" href="/assets/styles.css">
