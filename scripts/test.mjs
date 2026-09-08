@@ -105,9 +105,12 @@ for (const link of internalLinks) {
   assert(await exists(target), `Broken internal reference: ${link}`);
 }
 
-for (const required of ['404.html', 'offline.html', 'manifest.webmanifest', 'robots.txt', 'sitemap.xml', 'rss.xml', 'service-worker.js', 'assets/favicon.svg', 'assets/icon-192.png', 'assets/icon-512.png', 'assets/og-cover.png']) {
+for (const required of ['404.html', 'offline.html', 'manifest.webmanifest', 'robots.txt', 'sitemap.xml', 'rss.xml', 'service-worker.js', 'ads.txt', 'assets/favicon.svg', 'assets/icon-192.png', 'assets/icon-512.png', 'assets/og-cover.png']) {
   assert(await exists(path.join(dist, required)), `Missing generated or copied asset: ${required}`);
 }
+
+const adsTxt = await readFile(path.join(dist, 'ads.txt'), 'utf8');
+assert(adsTxt.includes(`google.com, ${GOOGLE_ADSENSE_ACCOUNT.replace(/^ca-/, '')}, DIRECT, f08c47fec0942fa0`), 'Invalid ads.txt content');
 
 const sitemap = await readFile(path.join(dist, 'sitemap.xml'), 'utf8');
 const sitemapLocs = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map((match) => match[1]);
