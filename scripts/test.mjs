@@ -3,7 +3,7 @@ import { readdir, readFile, stat } from 'node:fs/promises';
 import { spawnSync } from 'node:child_process';
 import path from 'node:path';
 import { pathToFileURL, fileURLToPath } from 'node:url';
-import { GOOGLE_ADSENSE_ACCOUNT, localeOrder, locales, pagePath, pages } from '../src/config.mjs';
+import { GOOGLE_ADSENSE_ACCOUNT, NAVER_SITE_VERIFICATION, localeOrder, locales, pagePath, pages } from '../src/config.mjs';
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = path.join(projectRoot, 'dist');
@@ -43,6 +43,7 @@ async function exists(filePath) {
 
 const rootHtmlPath = path.join(dist, 'index.html');
 assert((await readFile(rootHtmlPath, 'utf8')).includes(`<meta name="google-adsense-account" content="${GOOGLE_ADSENSE_ACCOUNT}">`), 'Missing AdSense meta tag on /');
+assert((await readFile(rootHtmlPath, 'utf8')).includes(`<meta name="naver-site-verification" content="${NAVER_SITE_VERIFICATION}">`), 'Missing Naver verification meta tag on /');
 const htmlFiles = [rootHtmlPath];
 for (const locale of localeOrder) {
   const titles = new Set();
@@ -55,6 +56,7 @@ for (const locale of localeOrder) {
     assert(html.includes(`<html lang="${locales[locale].htmlLang}"`), `Wrong html lang on ${route}`);
     assert(html.includes(`<link rel="canonical" href="${siteUrl}${route}">`), `Wrong canonical on ${route}`);
     assert(html.includes(`<meta name="google-adsense-account" content="${GOOGLE_ADSENSE_ACCOUNT}">`), `Missing AdSense meta tag on ${route}`);
+    assert(html.includes(`<meta name="naver-site-verification" content="${NAVER_SITE_VERIFICATION}">`), `Missing Naver verification meta tag on ${route}`);
     assert(html.includes('hreflang="ko"'), `Missing Korean hreflang on ${route}`);
     assert(html.includes('hreflang="en"'), `Missing English hreflang on ${route}`);
     assert(html.includes('hreflang="zh-Hans"'), `Missing Chinese hreflang on ${route}`);

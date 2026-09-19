@@ -16,7 +16,7 @@ import { render404, renderLanguageHub, renderLocalizedPage } from '../src/templa
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const sourcePublic = path.join(projectRoot, 'src', 'public');
 const outputDir = path.join(projectRoot, 'dist');
-const siteUrl = normalizeSiteUrl(process.env.SITE_URL || process.env.RENDER_EXTERNAL_URL);
+const siteUrl = normalizeSiteUrl(process.env.SITE_URL);
 
 function outputPathForRoute(route) {
   const routePath = route.replace(/^\/+|\/+$/g, '');
