@@ -11,6 +11,8 @@ services:
         value: 24.14.1
       - key: SKIP_INSTALL_DEPS
         value: "true"
+      - key: SITE_URL
+        value: https://www.gomokuflow.com
     headers:
       - path: /*
         name: X-Content-Type-Options
