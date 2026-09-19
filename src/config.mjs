@@ -2,6 +2,7 @@ export const SITE_NAME = 'FIVEGRID';
 export const DEFAULT_SITE_URL = 'https://fivegrid-omok.onrender.com';
 export const BUILD_DATE = '2026-08-17';
 export const GOOGLE_ADSENSE_ACCOUNT = 'ca-pub-7766989656523085';
+export const NAVER_SITE_VERIFICATION = 'e00a9f893d29dc75526a61fa7841ac55cc53d871';
 
 export const localeOrder = ['ko', 'en', 'zh'];
 
