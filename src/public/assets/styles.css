@@ -405,8 +405,13 @@ tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
 .play-hero { padding: 54px 0 38px; }
 .play-hero h1 { max-width: 900px; margin-bottom: 16px; font-size: clamp(2.8rem,5.7vw,5.2rem); line-height: 1; letter-spacing: -.06em; }
 .play-hero .shell > p:last-child { max-width: 800px; color: var(--muted); }
+.coupang-banner-section { margin-bottom: 48px; }
+.coupang-shell { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.coupang-ad-box { display: flex; justify-content: center; align-items: center; width: 100%; max-width: 680px; min-height: 140px; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; }
+.coupang-ad-box iframe { max-width: 100%; border: 0; }
+.coupang-disclosure { margin-top: 10px; font-size: .76rem; font-weight: 600; color: #e53935; line-height: 1.45; word-break: keep-all; }
 .game-shell { margin-bottom: 70px; }
-.game-stage { position: relative; padding: 18px; border: 1px solid rgba(255,255,255,.08); border-radius: 28px; background: var(--ink); color: #fff; box-shadow: var(--shadow-md); }
+.game-stage, #game { scroll-margin-top: calc(var(--header-height) + 14px); position: relative; padding: 18px; border: 1px solid rgba(255,255,255,.08); border-radius: 28px; background: var(--ink); color: #fff; box-shadow: var(--shadow-md); }
 .game-topbar { display: flex; align-items: center; justify-content: space-between; min-height: 58px; padding: 0 10px 12px; }
 .game-status { display: flex; align-items: center; gap: 12px; }
 .game-status small, .game-metrics small { display: block; color: rgba(255,255,255,.5); font-size: .64rem; letter-spacing: .08em; text-transform: uppercase; }
@@ -419,7 +424,7 @@ tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
 .game-metrics strong { font-size: .86rem; font-variant-numeric: tabular-nums; }
 .game-main-grid { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 16px; }
 .board-panel { min-width: 0; }
-.board-frame { position: relative; display: grid; place-items: center; width: 100%; border-radius: 20px; background: var(--board); overflow: hidden; box-shadow: var(--shadow-board), inset 0 0 0 1px rgba(0,0,0,.18); touch-action: manipulation; }
+.board-frame { position: relative; display: grid; place-items: center; width: 100%; max-width: min(100%, calc(100dvh - var(--header-height) - 145px)); aspect-ratio: 1; margin-inline: auto; border-radius: 20px; background: var(--board); overflow: hidden; box-shadow: var(--shadow-board), inset 0 0 0 1px rgba(0,0,0,.18); touch-action: manipulation; }
 .gomoku-board { width: 100%; height: auto; aspect-ratio: 1; outline: none; cursor: crosshair; touch-action: none; }
 .gomoku-board:focus-visible { box-shadow: inset 0 0 0 4px var(--accent-soft); }
 .ai-overlay { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 14px; background: rgba(24,26,39,.22); backdrop-filter: blur(1.5px); pointer-events: none; }
@@ -702,11 +707,12 @@ tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
   .drill-grid { padding: 30px 24px; border-radius: var(--radius-md); }
   .play-hero { padding-top: 36px; }
   .play-hero h1 { font-size: clamp(2.6rem,14vw,4rem); }
+  .coupang-banner-section { margin-bottom: 36px; }
   .game-shell { width: 100%; margin-bottom: 30px; }
-  .game-stage { padding: 8px; border-radius: 0; }
+  .game-stage, #game { scroll-margin-top: calc(var(--header-height) + 8px); padding: 8px; border-radius: 0; }
   .game-topbar { padding-inline: 6px; }
   .game-metrics { gap: 9px; }
-  .board-frame { border-radius: 11px; }
+  .board-frame { border-radius: 11px; max-width: min(100%, calc(100dvh - var(--header-height) - 130px)); }
   .keyboard-note { display: none; }
   .game-action-row { position: sticky; z-index: 20; bottom: calc(8px + env(safe-area-inset-bottom)); margin: 8px 0; padding: 5px; border-radius: 14px; background: rgba(24,26,39,.93); backdrop-filter: blur(10px); }
   .game-button { min-height: 48px; padding: 0 8px; }

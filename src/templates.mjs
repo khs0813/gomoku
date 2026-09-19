@@ -218,7 +218,10 @@ function headMarkup(siteUrl, locale, pageKey, extra = {}) {
 function headerMarkup(locale, pageKey) {
   const c = content[locale];
   const courseActive = ['beginner', 'intermediate', 'advanced'].includes(pageKey);
-  const navLink = (key, label, active = pageKey === key) => `<a href="${pagePath(locale, key)}"${active ? ' aria-current="page"' : ''}>${escapeHtml(label)}</a>`;
+  const navLink = (key, label, active = pageKey === key) => {
+    const href = key === 'play' ? `${pagePath(locale, 'play')}#game` : pagePath(locale, key);
+    return `<a href="${href}"${active ? ' aria-current="page"' : ''}>${escapeHtml(label)}</a>`;
+  };
   const languageLinks = localeOrder.map((code) => {
     const active = code === locale;
     return `<a href="${pagePath(code, pageKey)}" hreflang="${locales[code].hreflang}" lang="${locales[code].htmlLang}"${active ? ' aria-current="true"' : ''}><span>${escapeHtml(locales[code].label)}</span>${active ? icon('check', 16) : ''}</a>`;
@@ -258,7 +261,7 @@ function headerMarkup(locale, pageKey) {
           <summary aria-label="${escapeHtml(c.common.footer.language)}">${escapeHtml(locales[locale].shortLabel)} ${icon('chevron', 15)}</summary>
           <div class="language-panel">${languageLinks}</div>
         </details>
-        <a class="button button-small button-dark desktop-play" href="${pagePath(locale, 'play')}">${icon('play', 16)} ${escapeHtml(c.common.actions.playNow)}</a>
+        <a class="button button-small button-dark desktop-play" href="${pagePath(locale, 'play')}#game">${icon('play', 16)} ${escapeHtml(c.common.actions.playNow)}</a>
         <details class="mobile-menu">
           <summary aria-label="Menu">${icon('menu', 22)}</summary>
           <div class="mobile-menu-panel">
@@ -283,7 +286,7 @@ function footerMarkup(locale) {
       </div>
       <div class="footer-column">
         <strong>${escapeHtml(c.common.footer.play)}</strong>
-        <a href="${pagePath(locale, 'play')}">${escapeHtml(c.common.nav.play)}</a>
+        <a href="${pagePath(locale, 'play')}#game">${escapeHtml(c.common.nav.play)}</a>
         <a href="${pagePath(locale, 'rules')}">${escapeHtml(c.common.nav.rules)}</a>
         <a href="${pagePath(locale, 'strategy')}">${escapeHtml(c.common.nav.strategy)}</a>
       </div>
@@ -383,7 +386,7 @@ function renderHome(siteUrl, locale) {
         <h1><span>${escapeHtml(h.titleLead)}</span> <em>${escapeHtml(h.titleAccent)}</em></h1>
         <p class="hero-intro">${escapeHtml(h.intro)}</p>
         <div class="hero-actions">
-          <a class="button button-primary" href="${pagePath(locale, 'play')}">${icon('play', 18)} ${escapeHtml(c.common.actions.playNow)}</a>
+          <a class="button button-primary" href="${pagePath(locale, 'play')}#game">${icon('play', 18)} ${escapeHtml(c.common.actions.playNow)}</a>
           <a class="button button-ghost" href="${pagePath(locale, 'beginner')}">${escapeHtml(c.common.actions.startBeginner)} ${icon('arrow', 18)}</a>
         </div>
         <div class="hero-stats">${h.stats.map((stat) => `<div><strong>${escapeHtml(stat.value)}</strong><span>${escapeHtml(stat.label)}</span></div>`).join('')}</div>
@@ -426,21 +429,21 @@ function renderHome(siteUrl, locale) {
   </section>
 
   <section class="final-cta">
-    <div class="shell final-cta-inner"><div><p class="eyebrow">YOUR NEXT MOVE</p><h2>${escapeHtml(c.common.actions.playNow)}</h2></div><a class="button button-light" href="${pagePath(locale, 'play')}">${icon('play', 18)} ${escapeHtml(c.common.actions.playNow)}</a></div>
+    <div class="shell final-cta-inner"><div><p class="eyebrow">YOUR NEXT MOVE</p><h2>${escapeHtml(c.common.actions.playNow)}</h2></div><a class="button button-light" href="${pagePath(locale, 'play')}#game">${icon('play', 18)} ${escapeHtml(c.common.actions.playNow)}</a></div>
   </section>`;
   return pageShell({ siteUrl, locale, pageKey: 'home', body });
 }
 
 function gameShellMarkup(locale) {
   const labels = content[locale].play.labels;
-  return `<section class="game-stage" data-game-root data-locale="${locale}">
+  return `<section class="game-stage" id="game" data-game-root data-locale="${locale}">
     <div class="game-topbar">
       <div class="game-status" aria-live="polite"><span class="turn-stone turn-black" data-turn-stone></span><div><small>${escapeHtml(labels.status)}</small><strong data-status>${escapeHtml(labels.yourTurn)}</strong></div></div>
       <div class="game-metrics"><span><small>${escapeHtml(labels.move)}</small><strong data-move-count>0</strong></span><span><small>${escapeHtml(labels.elapsed)}</small><strong data-timer>00:00</strong></span></div>
     </div>
     <div class="game-main-grid">
       <div class="board-panel">
-        <div class="board-frame" data-board-frame>
+        <div class="board-frame" id="board" data-board-frame>
           <canvas class="gomoku-board" data-board width="900" height="900" tabindex="0" role="application" aria-label="${escapeHtml(labels.keyboardHelp)}"></canvas>
           <div class="ai-overlay" data-ai-overlay hidden><span class="thinking-orbit"><i></i></span><strong>${escapeHtml(labels.aiTurn)}</strong></div>
         </div>
@@ -477,8 +480,23 @@ function gameShellMarkup(locale) {
 function renderPlay(siteUrl, locale) {
   const c = content[locale];
   const p = c.play;
+  const coupangMarkup = ['ko', 'en'].includes(locale)
+    ? `<section class="coupang-banner-section" aria-label="쿠팡 파트너스">
+      <div class="shell coupang-shell">
+        <div class="coupang-ad-box">
+          <script src="https://ads-partners.coupang.com/g.js"></script>
+          <script>
+            new PartnersCoupang.G({"id":999028,"template":"carousel","trackingCode":"AF4791224","width":"680","height":"140","tsource":""});
+          </script>
+        </div>
+        <p class="coupang-disclosure">이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.</p>
+      </div>
+    </section>`
+    : '';
+
   const body = `
     <section class="play-hero"><div class="shell">${breadcrumbMarkup(locale, 'play')}<p class="eyebrow">${escapeHtml(p.eyebrow)}</p><h1>${escapeHtml(p.title)}</h1><p>${escapeHtml(p.intro)}</p></div></section>
+    ${coupangMarkup}
     <div class="shell game-shell">${gameShellMarkup(locale)}</div>
     <section class="section compact-section"><div class="shell"><div class="section-heading centered"><p class="eyebrow">MOBILE UX</p><h2>${escapeHtml(p.guideTitle)}</h2></div><div class="guide-grid">${p.guide.map((item,index)=>`<article><span>0${index+1}</span><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.text)}</p></article>`).join('')}</div></div></section>
     <section class="section ai-explainer"><div class="shell"><div class="section-heading"><p class="eyebrow">AI LEVELS</p><h2>${escapeHtml(p.aiTitle)}</h2></div><div class="ai-card-grid">${p.aiCards.map((item,index)=>`<article class="ai-level-card level-${index+1}"><div><span class="level-orb">${index+1}</span><span class="level-badge">${escapeHtml(item.badge)}</span></div><h3>${escapeHtml(item.level)}</h3><p>${escapeHtml(item.text)}</p></article>`).join('')}</div></div></section>
@@ -524,7 +542,7 @@ function renderRules(siteUrl, locale) {
       <section class="content-section dark-content"><div class="shell dark-content-grid"><div><p class="eyebrow">ORDER MATTERS</p><h2>${escapeHtml(r.precedenceTitle)}</h2></div><ol>${r.precedence.map((item)=>`<li><span>${escapeHtml(item)}</span></li>`).join('')}</ol></div></section>
       <section class="content-section"><div class="shell"><div class="section-heading"><p class="eyebrow">GLOSSARY</p><h2>${escapeHtml(r.glossaryTitle)}</h2></div><dl class="glossary-grid">${r.glossary.map((item)=>`<div><dt>${escapeHtml(item.term)}</dt><dd>${escapeHtml(item.definition)}</dd></div>`).join('')}</dl></div></section>
       <section class="content-section faq-section"><div class="shell faq-shell"><div class="section-heading"><p class="eyebrow">FAQ</p><h2>${escapeHtml(r.faqTitle)}</h2></div>${faqMarkup(r.faq)}</div></section>
-      <section class="article-cta"><div class="shell article-cta-inner"><div><p class="eyebrow">PUT IT INTO PRACTICE</p><h2>${escapeHtml(c.common.actions.playNow)}</h2></div><a class="button button-light" href="${pagePath(locale, 'play')}">${icon('play',18)} ${escapeHtml(c.common.actions.playNow)}</a></div></section>
+      <section class="article-cta"><div class="shell article-cta-inner"><div><p class="eyebrow">PUT IT INTO PRACTICE</p><h2>${escapeHtml(c.common.actions.playNow)}</h2></div><a class="button button-light" href="${pagePath(locale, 'play')}#game">${icon('play',18)} ${escapeHtml(c.common.actions.playNow)}</a></div></section>
     </article>`;
   return pageShell({ siteUrl, locale, pageKey: 'rules', body });
 }
@@ -540,7 +558,7 @@ function renderStrategy(siteUrl, locale) {
       <section class="content-section"><div class="shell strategy-two-col"><div class="strategy-copy"><p class="eyebrow">OPENING</p><h2>${escapeHtml(s.openingTitle)}</h2><p>${escapeHtml(s.openingText)}</p><ul class="dot-list">${s.openingTips.map((tip)=>`<li>${escapeHtml(tip)}</li>`).join('')}</ul></div><div class="strategy-copy accent-copy"><p class="eyebrow">DEFENSE</p><h2>${escapeHtml(s.defenseTitle)}</h2><p>${escapeHtml(s.defenseText)}</p><ol>${s.defenseSteps.map((step)=>`<li>${escapeHtml(step)}</li>`).join('')}</ol></div></div></section>
       <section class="content-section dark-content"><div class="shell calculation-grid"><div><p class="eyebrow">CALCULATION</p><h2>${escapeHtml(s.readingTitle)}</h2><p>${escapeHtml(s.readingText)}</p></div><div class="formula-card"><span>${escapeHtml(s.readingFormula)}</span><div aria-hidden="true"><i></i>${icon('arrow',22)}<i></i>${icon('arrow',22)}<i></i></div></div></div></section>
       <section class="content-section"><div class="shell"><div class="section-heading"><p class="eyebrow">COMMON MISTAKES</p><h2>${escapeHtml(s.mistakesTitle)}</h2></div><div class="mistake-grid">${s.mistakes.map((item,index)=>`<article><span>0${index+1}</span><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.text)}</p></article>`).join('')}</div></div></section>
-      <section class="content-section drill-section"><div class="shell drill-grid"><div><p class="eyebrow">30 SECOND DRILL</p><h2>${escapeHtml(s.drillTitle)}</h2></div><ol>${s.drill.map((item)=>`<li>${icon('check',17)}<span>${escapeHtml(item)}</span></li>`).join('')}</ol><a class="button button-primary" href="${pagePath(locale,'play')}">${icon('play',17)} ${escapeHtml(c.common.actions.playNow)}</a></div></section>
+      <section class="content-section drill-section"><div class="shell drill-grid"><div><p class="eyebrow">30 SECOND DRILL</p><h2>${escapeHtml(s.drillTitle)}</h2></div><ol>${s.drill.map((item)=>`<li>${icon('check',17)}<span>${escapeHtml(item)}</span></li>`).join('')}</ol><a class="button button-primary" href="${pagePath(locale,'play')}#game">${icon('play',17)} ${escapeHtml(c.common.actions.playNow)}</a></div></section>
       <section class="content-section faq-section"><div class="shell faq-shell"><div class="section-heading"><p class="eyebrow">FAQ</p><h2>${escapeHtml(s.faqTitle)}</h2></div>${faqMarkup(s.faq)}</div></section>
     </article>`;
   return pageShell({ siteUrl, locale, pageKey: 'strategy', body });
@@ -565,8 +583,8 @@ function renderCourse(siteUrl, locale, pageKey) {
       <div class="shell">${courseNav(locale,pageKey)}</div>
       <section class="content-section course-overview"><div class="shell course-overview-grid"><div><p class="eyebrow">YOU WILL LEARN</p><h2>${escapeHtml(course.title)}</h2></div><ul class="check-list">${course.outcomes.map((item)=>`<li>${icon('check',17)}<span>${escapeHtml(item)}</span></li>`).join('')}</ul><div class="course-progress-card"><div><span data-progress-label>0 / ${course.lessons.length}</span><strong data-progress-percent>0%</strong></div><div class="progress-track"><i data-progress-bar></i></div></div></div></section>
       <section class="content-section surface-section lessons-section"><div class="shell"><div class="section-heading"><p class="eyebrow">LESSONS</p><h2>${course.lessons.length} ${escapeHtml(c.common.lesson)}</h2></div><div class="lesson-list">${course.lessons.map((lesson,lessonIndex)=>`<article class="lesson-card" data-lesson-card="${lesson.id}"><div class="lesson-number"><span>${escapeHtml(lesson.number)}</span><i></i></div><div class="lesson-content"><h3>${escapeHtml(lesson.title)}</h3><p>${escapeHtml(lesson.text)}</p><div class="lesson-tip">${icon('bulb',18)}<span>${escapeHtml(lesson.tip)}</span></div></div><button class="lesson-complete" type="button" data-lesson-id="${lesson.id}" aria-pressed="false"><span class="unchecked">${escapeHtml(c.common.lesson)} ${lessonIndex+1}</span><span class="checked">${icon('check',17)} ${escapeHtml(doneLabel)}</span></button></article>`).join('')}</div></div></section>
-      <section class="content-section challenge-section"><div class="shell challenge-grid"><div class="challenge-mark"><span>${icon('trophy',28)}</span></div><div><p class="eyebrow">CHECKPOINT</p><h2>${escapeHtml(course.challengeTitle)}</h2><p>${escapeHtml(course.challengeText)}</p></div><ul>${course.checklist.map((item,checkIndex)=>`<li><label><input type="checkbox" data-checkpoint="${checkIndex}"><span>${icon('check',16)}</span><b>${escapeHtml(item)}</b></label></li>`).join('')}</ul><a class="button button-primary" href="${pagePath(locale,'play')}?difficulty=${pageKey}&course=${pageKey}">${icon('play',18)} ${escapeHtml(c.common.actions.playNow)}</a></div></section>
-      <section class="course-next"><div class="shell course-next-inner"><div><p class="eyebrow">NEXT</p><h2>${escapeHtml(course.nextTitle)}</h2><p>${escapeHtml(course.nextText)}</p></div><a class="button button-light" href="${pagePath(locale,nextKey)}">${escapeHtml(nextLabel)} ${icon('arrow',18)}</a></div></section>
+      <section class="content-section challenge-section"><div class="shell challenge-grid"><div class="challenge-mark"><span>${icon('trophy',28)}</span></div><div><p class="eyebrow">CHECKPOINT</p><h2>${escapeHtml(course.challengeTitle)}</h2><p>${escapeHtml(course.challengeText)}</p></div><ul>${course.checklist.map((item,checkIndex)=>`<li><label><input type="checkbox" data-checkpoint="${checkIndex}"><span>${icon('check',16)}</span><b>${escapeHtml(item)}</b></label></li>`).join('')}</ul><a class="button button-primary" href="${pagePath(locale,'play')}?difficulty=${pageKey}&course=${pageKey}#game">${icon('play',18)} ${escapeHtml(c.common.actions.playNow)}</a></div></section>
+      <section class="course-next"><div class="shell course-next-inner"><div><p class="eyebrow">NEXT</p><h2>${escapeHtml(course.nextTitle)}</h2><p>${escapeHtml(course.nextText)}</p></div><a class="button button-light" href="${pagePath(locale,nextKey)}${nextKey==='play'?'#game':''}">${escapeHtml(nextLabel)} ${icon('arrow',18)}</a></div></section>
     </article>`;
   return pageShell({ siteUrl, locale, pageKey, body, bodyClass: `page-course page-course-${pageKey}`, extra: { scripts: '<script type="module" src="/assets/course-progress.js"></script>' } });
 }

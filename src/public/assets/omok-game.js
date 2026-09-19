@@ -922,10 +922,37 @@ if (root) {
   });
   elements.sound.addEventListener('change', () => { readControls(); });
   elements.coordinates.addEventListener('change', () => { readControls(); resizeCanvas(); });
-  elements.newGame.addEventListener('click', startNewGame);
+  function focusGameBoard(smooth = true) {
+    const header = document.querySelector('.site-header');
+    const headerHeight = header ? header.getBoundingClientRect().height : 76;
+    const targetRect = root.getBoundingClientRect();
+    const absoluteTargetTop = window.pageYOffset + targetRect.top;
+    const scrollTarget = Math.max(0, absoluteTargetTop - headerHeight - 12);
+
+    window.scrollTo({
+      top: scrollTarget,
+      behavior: smooth ? 'smooth' : 'auto'
+    });
+
+    if (elements.canvas) {
+      try {
+        elements.canvas.focus({ preventScroll: true });
+      } catch {
+        elements.canvas.focus();
+      }
+    }
+  }
+
+  elements.newGame.addEventListener('click', () => {
+    startNewGame();
+    focusGameBoard(true);
+  });
   elements.undo.addEventListener('click', undoMove);
   elements.hint.addEventListener('click', requestHint);
-  elements.dialogNew.addEventListener('click', startNewGame);
+  elements.dialogNew.addEventListener('click', () => {
+    startNewGame();
+    focusGameBoard(true);
+  });
   elements.dialogClose.addEventListener('click', closeResultDialog);
   elements.resetRecord.addEventListener('click', () => {
     if (!window.confirm(labels.confirmReset)) return;
@@ -933,6 +960,17 @@ if (root) {
     statsSnapshotBeforeResult = null;
     saveJson(storageKeys.stats, stats);
     renderStats();
+  });
+
+  document.querySelectorAll('a[href*="/play"]').forEach((link) => {
+    link.addEventListener('click', (event) => {
+      const url = new URL(link.href, location.origin);
+      if (url.pathname === location.pathname) {
+        event.preventDefault();
+        history.replaceState(null, '', `${location.pathname}${location.search}#game`);
+        focusGameBoard(true);
+      }
+    });
   });
 
   if ('ResizeObserver' in window) {
@@ -950,4 +988,13 @@ if (root) {
   renderStats();
   worker = initializeWorker();
   startNewGame();
+
+  const shouldFocusOnInit = location.hash === '#game' || location.hash === '#board' || !location.hash;
+  if (shouldFocusOnInit) {
+    requestAnimationFrame(() => {
+      focusGameBoard(false);
+      window.setTimeout(() => focusGameBoard(true), 250);
+      window.setTimeout(() => focusGameBoard(true), 750);
+    });
+  }
 }
