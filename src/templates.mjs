@@ -357,6 +357,20 @@ function breadcrumbMarkup(locale, pageKey) {
   return `<nav class="breadcrumbs" aria-label="${escapeHtml(c.common.breadcrumbs)}"><ol>${items.map((item, index) => `<li>${index < items.length - 1 ? `<a href="${item.href}">${escapeHtml(item.name)}</a>` : `<span aria-current="page">${escapeHtml(item.name)}</span>`}</li>`).join('')}</ol></nav>`;
 }
 
+function coupangBannerMarkup(locale) {
+  return `<section class="coupang-banner-section" aria-label="쿠팡 파트너스">
+    <div class="shell coupang-shell">
+      <div class="coupang-ad-box">
+        <script src="https://ads-partners.coupang.com/g.js"></script>
+        <script>
+          new PartnersCoupang.G({"id":999028,"template":"carousel","trackingCode":"AF4791224","width":"680","height":"140","tsource":""});
+        </script>
+      </div>
+      <p class="coupang-disclosure">이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.</p>
+    </div>
+  </section>`;
+}
+
 function articleHero(locale, pageKey, data, options = {}) {
   const c = content[locale];
   const readTime = options.readTime || 6;
@@ -399,6 +413,8 @@ function renderHome(siteUrl, locale) {
     </div>
     <div class="shell trust-row">${h.trust.map((item, index) => `<span>${index === 0 ? icon('phone', 17) : index === 1 ? icon('keyboard', 17) : icon('shield', 17)} ${escapeHtml(item)}</span>`).join('')}</div>
   </section>
+
+  ${coupangBannerMarkup(locale)}
 
   <section class="section feature-section">
     <div class="shell">
@@ -480,23 +496,10 @@ function gameShellMarkup(locale) {
 function renderPlay(siteUrl, locale) {
   const c = content[locale];
   const p = c.play;
-  const coupangMarkup = ['ko', 'en'].includes(locale)
-    ? `<section class="coupang-banner-section" aria-label="쿠팡 파트너스">
-      <div class="shell coupang-shell">
-        <div class="coupang-ad-box">
-          <script src="https://ads-partners.coupang.com/g.js"></script>
-          <script>
-            new PartnersCoupang.G({"id":999028,"template":"carousel","trackingCode":"AF4791224","width":"680","height":"140","tsource":""});
-          </script>
-        </div>
-        <p class="coupang-disclosure">이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.</p>
-      </div>
-    </section>`
-    : '';
 
   const body = `
     <section class="play-hero"><div class="shell">${breadcrumbMarkup(locale, 'play')}<p class="eyebrow">${escapeHtml(p.eyebrow)}</p><h1>${escapeHtml(p.title)}</h1><p>${escapeHtml(p.intro)}</p></div></section>
-    ${coupangMarkup}
+    ${coupangBannerMarkup(locale)}
     <div class="shell game-shell">${gameShellMarkup(locale)}</div>
     <section class="section compact-section"><div class="shell"><div class="section-heading centered"><p class="eyebrow">MOBILE UX</p><h2>${escapeHtml(p.guideTitle)}</h2></div><div class="guide-grid">${p.guide.map((item,index)=>`<article><span>0${index+1}</span><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.text)}</p></article>`).join('')}</div></div></section>
     <section class="section ai-explainer"><div class="shell"><div class="section-heading"><p class="eyebrow">AI LEVELS</p><h2>${escapeHtml(p.aiTitle)}</h2></div><div class="ai-card-grid">${p.aiCards.map((item,index)=>`<article class="ai-level-card level-${index+1}"><div><span class="level-orb">${index+1}</span><span class="level-badge">${escapeHtml(item.badge)}</span></div><h3>${escapeHtml(item.level)}</h3><p>${escapeHtml(item.text)}</p></article>`).join('')}</div></div></section>
@@ -535,6 +538,7 @@ function renderRules(siteUrl, locale) {
   const c = content[locale];
   const r = c.rules;
   const body = `${articleHero(locale, 'rules', r, { readTime: 8 })}
+    ${coupangBannerMarkup(locale)}
     <article class="article-body">
       <section class="content-section"><div class="shell narrow"><h2>${escapeHtml(r.basicsTitle)}</h2><div class="step-list">${r.basics.map((item)=>`<div class="step-item"><span>${escapeHtml(item.number)}</span><div><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.text)}</p></div></div>`).join('')}</div></div></section>
       <section class="content-section surface-section"><div class="shell"><div class="section-heading"><p class="eyebrow">RULESETS</p><h2>${escapeHtml(r.variantsTitle)}</h2></div><div class="responsive-table"><table><thead><tr>${r.tableHeaders.map((h)=>`<th>${escapeHtml(h)}</th>`).join('')}</tr></thead><tbody>${r.variants.map((row)=>`<tr><th>${escapeHtml(row.name)}</th><td>${escapeHtml(row.black)}</td><td>${escapeHtml(row.white)}</td><td>${escapeHtml(row.forbidden)}</td><td>${escapeHtml(row.recommended)}</td></tr>`).join('')}</tbody></table></div></div></section>
@@ -552,6 +556,7 @@ function renderStrategy(siteUrl, locale) {
   const s = c.strategy;
   const aside = `<div class="strategy-aside">${miniPatternSvg('fourThree', locale)}<span>4—3</span></div>`;
   const body = `${articleHero(locale, 'strategy', s, { readTime: 10, aside })}
+    ${coupangBannerMarkup(locale)}
     <article class="article-body">
       <section class="content-section"><div class="shell"><div class="section-heading"><p class="eyebrow">DECISION ORDER</p><h2>${escapeHtml(s.priorityTitle)}</h2></div><div class="priority-grid">${s.priority.map((item)=>`<article><span>${escapeHtml(item.number)}</span><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.text)}</p></article>`).join('')}</div></div></section>
       <section class="content-section surface-section"><div class="shell"><div class="section-heading"><p class="eyebrow">PATTERN VALUE</p><h2>${escapeHtml(s.patternTitle)}</h2></div><div class="pattern-ranking">${s.patterns.map((item,index)=>`<article><div class="rank-mark">${escapeHtml(item.rank)}</div><div class="rank-board">${miniPatternSvg(index===0?'openFour':index===1?'fourThree':index===2?'openThree':'openThree', locale)}</div><div><span>${escapeHtml(item.power)}</span><h3>${escapeHtml(item.name)}</h3><p>${escapeHtml(item.text)}</p></div></article>`).join('')}</div></div></section>
@@ -581,6 +586,7 @@ function renderCourse(siteUrl, locale, pageKey) {
   const body = `${articleHero(locale, pageKey, course, { readTime: index === 0 ? 8 : index === 1 ? 11 : 14, aside })}
     <article class="article-body course-body" data-course="${pageKey}">
       <div class="shell">${courseNav(locale,pageKey)}</div>
+      ${coupangBannerMarkup(locale)}
       <section class="content-section course-overview"><div class="shell course-overview-grid"><div><p class="eyebrow">YOU WILL LEARN</p><h2>${escapeHtml(course.title)}</h2></div><ul class="check-list">${course.outcomes.map((item)=>`<li>${icon('check',17)}<span>${escapeHtml(item)}</span></li>`).join('')}</ul><div class="course-progress-card"><div><span data-progress-label>0 / ${course.lessons.length}</span><strong data-progress-percent>0%</strong></div><div class="progress-track"><i data-progress-bar></i></div></div></div></section>
       <section class="content-section surface-section lessons-section"><div class="shell"><div class="section-heading"><p class="eyebrow">LESSONS</p><h2>${course.lessons.length} ${escapeHtml(c.common.lesson)}</h2></div><div class="lesson-list">${course.lessons.map((lesson,lessonIndex)=>`<article class="lesson-card" data-lesson-card="${lesson.id}"><div class="lesson-number"><span>${escapeHtml(lesson.number)}</span><i></i></div><div class="lesson-content"><h3>${escapeHtml(lesson.title)}</h3><p>${escapeHtml(lesson.text)}</p><div class="lesson-tip">${icon('bulb',18)}<span>${escapeHtml(lesson.tip)}</span></div></div><button class="lesson-complete" type="button" data-lesson-id="${lesson.id}" aria-pressed="false"><span class="unchecked">${escapeHtml(c.common.lesson)} ${lessonIndex+1}</span><span class="checked">${icon('check',17)} ${escapeHtml(doneLabel)}</span></button></article>`).join('')}</div></div></section>
       <section class="content-section challenge-section"><div class="shell challenge-grid"><div class="challenge-mark"><span>${icon('trophy',28)}</span></div><div><p class="eyebrow">CHECKPOINT</p><h2>${escapeHtml(course.challengeTitle)}</h2><p>${escapeHtml(course.challengeText)}</p></div><ul>${course.checklist.map((item,checkIndex)=>`<li><label><input type="checkbox" data-checkpoint="${checkIndex}"><span>${icon('check',16)}</span><b>${escapeHtml(item)}</b></label></li>`).join('')}</ul><a class="button button-primary" href="${pagePath(locale,'play')}?difficulty=${pageKey}&course=${pageKey}#game">${icon('play',18)} ${escapeHtml(c.common.actions.playNow)}</a></div></section>
