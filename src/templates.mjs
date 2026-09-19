@@ -363,7 +363,7 @@ function coupangBannerMarkup(locale) {
       <div class="coupang-ad-box">
         <script src="https://ads-partners.coupang.com/g.js"></script>
         <script>
-          new PartnersCoupang.G({"id":999028,"template":"carousel","trackingCode":"AF4791224","width":"680","height":"140","tsource":""});
+          new PartnersCoupang.G({"id":1031229,"template":"carousel","trackingCode":"AF4791224","width":"100%","height":"140","tsource":""});
         </script>
       </div>
       <p class="coupang-disclosure">이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.</p>
